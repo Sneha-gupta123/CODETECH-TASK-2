@@ -1,0 +1,91 @@
+# STUDENT GRADE TRACKER #
+
+class StudentGradeManager:
+    def __init__(self):
+        self.grades = {}
+        self.subjects = []
+
+    def input_grades(self):
+        while True:
+            subject = input("Enter subject name (or 'done' to finish): ").strip()
+            if subject.lower() == 'done':
+                if not self.grades:
+                    print("You must enter at least one grade before finishing.")
+                    continue
+                break
+            if subject in self.grades:
+                print(f"Grade for {subject} is already entered. Please use a unique subject name.")
+                continue
+            try:
+                grade = float(input(f"Enter grade for {subject}: "))
+                if 0 <= grade <= 100:
+                    self.grades[subject] = grade
+                    self.subjects.append(subject)
+                else:
+                    print("Error: Grade must be between 0 and 100.")
+            except ValueError:
+                print("Error: Invalid input. Please enter a numeric grade.")
+
+    def calculate_average(self):
+        if not self.grades:
+            raise ValueError("No grades available to calculate an average.")
+        total = sum(self.grades.values())
+        average = total / len(self.grades)
+        return average
+
+    def determine_letter_grade(self, average):
+        if average >= 90:
+            return 'A'
+        elif average >= 80:
+            return 'B'
+        elif average >= 70:
+            return 'C'
+        elif average >= 60:
+            return 'D'
+        else:
+            return 'F'
+
+    def calculate_gpa(self, average):
+        if average >= 90:
+            return 4.0
+        elif average >= 80:
+            return 3.0
+        elif average >= 70:
+            return 2.0
+        elif average >= 60:
+            return 1.0
+        else:
+            return 0.0
+
+    def display_results(self):
+        if not self.grades:
+            print("No grades available. Please input grades first.")
+            return
+
+        try:
+            average = self.calculate_average()
+            letter_grade = self.determine_letter_grade(average)
+            gpa = self.calculate_gpa(average)
+
+            print("\nGrade Summary:")
+            for subject in self.subjects:
+                print(f"{subject}: {self.grades[subject]}")
+
+            print(f"\nAverage Grade: {average:.2f}")
+            print(f"Letter Grade: {letter_grade}")
+            print(f"GPA: {gpa:.2f}")
+        except Exception as e:
+            print(f"Error while calculating results: {e}")
+
+def main():
+    student_manager = StudentGradeManager()
+
+    print("Welcome to the Student Grade Manager!")
+    try:
+        student_manager.input_grades()
+        student_manager.display_results()
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+if __name__ == "__main__":
+    main()
